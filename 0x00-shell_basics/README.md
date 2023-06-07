@@ -6,3 +6,4 @@
 => 3-listfiles : Display current directory contents in a long format.  
 => 4-listmorefiles : Display current directory contents, including hidden files.  
 => 5-listfilesdigitonly: Display wd contents + with user and group IDs displayed numerically + hidden file.
+=> my_first_directory : script that creates a directory named my_first_directory in the /tmp/ directory.  
