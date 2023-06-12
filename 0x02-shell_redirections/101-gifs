@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -type f -iname "*.gif" -printf "%s %f\n" | sort -k2 | sort -n -k1 | awk '{ print substr($2, 1, length($2)-4) }'
+find . -type f -iname "*.git" -printf "%s %f\n" | sort -k2 | sort -n -k1 | awk '{ print substr($2, 1, length($2)-4) }'
