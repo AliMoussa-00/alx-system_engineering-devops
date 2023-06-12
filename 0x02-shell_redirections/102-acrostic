@@ -1,2 +1,2 @@
 #!/bin/bash
-grep -o '^.' | tr -d '\n'
+cut -c 1 | paste -s -d ""
