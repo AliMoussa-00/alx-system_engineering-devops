@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# a Bash script that displays the visitor IP along with the HTTP status code from the Apache log file.
+# Ordered from the greatest to the lowest number of occurrences
+
+file="apache-access.log"
+
+if [ -e $file ]
+then
+	awk '{print $1, $9}' $file | sort | uniq -c | sort -nr
+fi
