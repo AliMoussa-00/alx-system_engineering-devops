@@ -6,6 +6,6 @@
 
 remote_user="ubuntu"
 remote_host="34.204.101.226"
-private_key_path="~/.ssh/school"
+private_key_path="$HOME/.ssh/school"
 
 ssh -i "$private_key_path" "$remote_user@$remote_host"
