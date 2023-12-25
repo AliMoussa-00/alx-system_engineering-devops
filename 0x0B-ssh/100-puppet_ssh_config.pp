@@ -2,12 +2,12 @@
 
 file { 'set_key':
 ensure => 'present',
-path   => '$HOME/.ssh/school',
+path   => '/etc/ssh/ssh_config',
 line   => '	IdentityFile ~/.ssh/school'
 }
 
 file { 'no_pass':
 ensure => 'present',
-path   => '$HOME/.ssh/school',
+path   => '/etc/ssh/ssh_config',
 line   => '	PasswordAuthentication no'
 }
