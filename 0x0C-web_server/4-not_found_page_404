@@ -19,13 +19,16 @@ echo "server {
 
         server_name _;
 
+	location / {
+                try_files \$uri \$uri/ =404;
+        }
+
         location /redirect_me {
                 return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
         }
 
         error_page 404 /custom_404.html;
         location = /custom_404.html {
-                root /usr/share/nginx/html;
                 internal;
         }
 
