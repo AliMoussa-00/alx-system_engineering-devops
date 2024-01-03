@@ -6,7 +6,7 @@ sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 
 # create a custom 404.html page
-echo "Ceci n'est pas une page" > /usr/share/nginx/html/custom_404.html
+echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
 
 # configure the sever block
 echo "server {
@@ -27,8 +27,9 @@ echo "server {
                 return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
         }
 
-        error_page 404 /custom_404.html;
-        location = /custom_404.html {
+        error_page 404 /404.html;
+        location = /404.html {
+		root /usr/share/nginx/html;
                 internal;
         }
 
