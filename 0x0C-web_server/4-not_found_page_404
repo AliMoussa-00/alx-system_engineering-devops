@@ -9,7 +9,8 @@ sudo ufw allow 'Nginx HTTP'
 echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
 
 # create a custom 404.html page
-echo "Ceci n'est pas une page" > /var/www/html/404.html
+echo "Ceci n'est pas une page" > 404.html
+sudo mv 404.html /var/www/html/404.html
 
 # configure the sever block
 echo "server {
@@ -35,6 +36,7 @@ echo "server {
                 internal;
         }
 
-}" > /etc/nginx/sites-available/default
+}" > default
+sudo mv -f default /etc/nginx/sites-available/default
 
 sudo service nginx restart
