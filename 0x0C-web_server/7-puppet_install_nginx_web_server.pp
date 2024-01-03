@@ -1,3 +1,4 @@
+# using Puppet instead of Bash for the previous tasks
 $default = "server {
         listen 80 default_server;
         listen [::]:80 default_server;
@@ -11,22 +12,22 @@ $default = "server {
 }"
 
 package { 'nginx':  # Installs an Nginx server
-ensure	=> 'installed',
+ensure  => 'installed',
 }
 
 file { 'index.html':
-ensure	=> 'present',
-path	=> '/var/www/html/index.html',
-content	=> 'Hello World!',
-mode	=> '0644'
+ensure  => 'present',
+path    => '/var/www/html/index.html',
+content => 'Hello World!',
+mode    => '0644'
 }
 
 file { 'server_config':
-ensure	=> 'present',
-path 	=> '/etc/nginx/sites-available/default',
+ensure  => 'present',
+path    => '/etc/nginx/sites-available/default',
 content => $default
 }
 
 exec { 'service nginx restart':
-path	=> ['/usr/sbin', '/usr/bin']
+path  => ['/usr/sbin', '/usr/bin']
 }
