@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Configure your Nginx server
+
+sudo apt update
+sudo apt-get -y install nginx
+
+sudo ufw allow 'Nginx HTTP'
+
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
+
+# create a custom 404.html page
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+# configure the sever block
+echo "server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+	add_header X-Served-By $HOSTNAME;
+
+	location / {
+		try_files \$uri \$uri/ =404;
+	}
+        location /redirect_me {
+                return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        }
+
+        error_page 404 /404.html;
+        location = /404.html {
+                internal;
+        }
+
+}" > /etc/nginx/sites-available/default
+
+sudo service nginx restart
