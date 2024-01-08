@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# installing HAProxy and configuring it
+
+apt-get -y update
+apt-get -y install haproxy
+
+config_file="/etc/haproxy/haproxy.cfg"
+
+config="frontend my_servers
+        bind *:80
+        mode http
+        use_backend my_web_backends
+
+backend my_web_backends
+        balance roundrobin
+        server 429218-web-01 34.204.101.226:80 check
+        server 429218-web-02 34.232.76.130:80 check"
+
+echo "$config" >> "$config_file"
