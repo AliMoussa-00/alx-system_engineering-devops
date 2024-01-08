@@ -17,3 +17,5 @@ backend my_web_backends
         server 429218-web-02 34.232.76.130:80 check"
 
 echo "$config" >> "$config_file"
+
+sudo service haproxy restart
