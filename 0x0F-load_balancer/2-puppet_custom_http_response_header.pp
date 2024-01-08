@@ -14,7 +14,7 @@ $default = 'server {
                 try_files \$uri \$uri/ =404;
         }
         location /redirect_me {
-                return 301 'https':#www.youtube.com/watch?v=QH2-TGUlwu4;
+                return 301 https:#www.youtube.com/watch?v=QH2-TGUlwu4;
         }
 
         error_page 404 /404.html;
@@ -29,8 +29,8 @@ exec {'update':
 }
 
 package { 'nginx':
-ensure => 'installed',
-after  => Exec['update'],
+ensure  => 'installed',
+require => Exec['update'],
 }
 
 file { 'index':
@@ -38,7 +38,7 @@ ensure  => 'present',
 path    => '/var/www/html/index.nginx-debian.html',
 content => 'Hello World!',
 mode    => '0644',
-after   => Package['nginx'],
+require => Package['nginx'],
 }
 
 file { 'error_404':
@@ -46,24 +46,25 @@ ensure  => 'present',
 path    => '/var/www/html/404.html',
 content => 'Ceci n\'est pas une page',
 mode    => '0644',
-after   => Package['nginx'],
+require => Package['nginx'],
 }
 
 file { 'server_config':
 ensure  => 'present',
 path    => '/etc/nginx/sites-available/default',
 content => $default,
-after   => Package['nginx'],
+require => Package['nginx'],
 }
 
 # adding header
 exec {'add_header':
-command  => 'sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default',
-provider => shell,
-after    => File['server_config'],
+environment => ["HOST=${hostname}"],
+command     => 'sudo sed -i "/root \/var\/www\/html;/a $(printf "\t")add_header X-Served-By $HOST;" /etc/nginx/sites-available/default',
+provider    => shell,
+require     => File['server_config'],
 }
 
 exec { 'service nginx restart':
-path  => ['/usr/sbin', '/usr/bin'],
-after => Exec['add_header'],
+path    => ['/usr/sbin', '/usr/bin'],
+require => Exec['add_header'],
 }
