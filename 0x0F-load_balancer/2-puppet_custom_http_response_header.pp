@@ -1,3 +1,5 @@
+# creating a custom HTTP header response, but with Puppet.
+
 $default = 'server {
         listen 80 default_server;
         listen [::]:80 default_server;
@@ -7,8 +9,6 @@ $default = 'server {
         index index.html index.htm index.nginx-debian.html;
 
         server_name _;
-
-        add_header X-Served-By $HOSTNAME;
 
         location / {
                 try_files \$uri \$uri/ =404;
@@ -21,33 +21,49 @@ $default = 'server {
         location = /404.html {
                 internal;
         }
-
 }'
 
-package { 'nginx':
-ensure  => 'installed',
+exec {'update':
+  provider => shell,
+  command  => 'sudo apt-get -y update',
 }
 
-file { 'index.html':
+package { 'nginx':
+ensure => 'installed',
+after  => Exec['update'],
+}
+
+file { 'index':
 ensure  => 'present',
 path    => '/var/www/html/index.nginx-debian.html',
 content => 'Hello World!',
-mode    => '0644'
+mode    => '0644',
+after   => Package['nginx'],
 }
 
-file { '404.html':
+file { 'error_404':
 ensure  => 'present',
 path    => '/var/www/html/404.html',
 content => 'Ceci n\'est pas une page',
-mode    => '0644'
+mode    => '0644',
+after   => Package['nginx'],
 }
 
 file { 'server_config':
 ensure  => 'present',
 path    => '/etc/nginx/sites-available/default',
-content => $default
+content => $default,
+after   => Package['nginx'],
+}
+
+# adding header
+exec {'add_header':
+command  => 'sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default',
+provider => shell,
+after    => File['server_config'],
 }
 
 exec { 'service nginx restart':
-path  => ['/usr/sbin', '/usr/bin']
+path  => ['/usr/sbin', '/usr/bin'],
+after => Exec['add_header'],
 }
