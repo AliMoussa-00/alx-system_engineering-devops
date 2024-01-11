@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# display informations for the subdomains
+
+domain_info () {
+
+	answer=$(dig "$1" | grep -A1 'ANSWER SECTION' | tail -n 1)
+
+	# get the subdomain from the first part from answer and
+	# specify the delimiter to "."
+	subdomain=$(echo "$answer" | awk '{print $1;}' FS=.)
+	record_type=$(echo "$answer" | awk '{print $4;}')
+	ip=$(echo "$answer" | awk '{print $5}')
+
+	echo "The subdomain $subdomain is a $record_type record and points to $ip"
+}
+
+if [ $# -eq 1 ]
+then
+	domain_info "www.$1"
+	domain_info "lb-01.$1"
+	domain_info "web-01.$1"
+	domain_info "web-02.$1"
+
+elif [ $# -eq 2 ]
+then
+	domain_info "$2.$1"
+fi
