@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# fixing the bug for not listing to port 80
+# remove this line if exists
+sudo sed -i "s/ipv6only=on//" /etc/nginx/sites-available/default
+
+# remove the symbolic link 'default' in 'sites-enabled'
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# recreate the symbolic link
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+sudo service nginx restart
