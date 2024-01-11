@@ -41,7 +41,6 @@ frontend www-http
 
 frontend www-https
         bind *:443 ssl crt /etc/haproxy/certs/www.ali-dns.tech.pem
-        mode http
         http-request set-header X-Forwarded-Proto https
         default_backend my-web-backend
 
