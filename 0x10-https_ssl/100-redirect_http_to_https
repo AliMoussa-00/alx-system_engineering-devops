@@ -37,6 +37,7 @@ frontend www-http
         bind *:80
         mode http
         http-request set-header X-Forwarded-Proto http
+	http-request redirect scheme https code 301 unless { ssl_fc }
         default_backend my-web-backend
 
 frontend www-https
