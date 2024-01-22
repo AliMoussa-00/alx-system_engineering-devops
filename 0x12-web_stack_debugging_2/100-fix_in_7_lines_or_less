@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# using user "nginx" to handle nginx server
+sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf
+sed -i "s/80/8080/" /etc/nginx/sites-available/default
+chown -R nginx:nginx /etc/nginx
+chmod 644 /etc/nginx/nginx.conf
+sudo -u nginx -c "service nginx restart"
