@@ -76,7 +76,7 @@ $ sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server
 
 ## Creating Users:
 
-#### Holberton user:
+### Holberton user:
 
 creating a user for the holberton school to be able to access  the replication status on both servers.
 
@@ -91,6 +91,20 @@ $ sudo mysql
 (mysql)> FLUSH PRIVILEGES;
 
 (mysql)> SHOW GRANTS FOR 'holberton_user'@'localhost';
+```
+### Replica user
+creating a new user for the replication
+```sql
+$ sudo mysql
+
+CREATE USER 'replica_user'@'%' IDENTIFIED BY 'replica_password';
+GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';
+FLUSH PRIVILEGES;
+
+-- Grant SELECT privileges on mysql.user to holberton_user
+GRANT SELECT ON mysql.user TO 'holberton_user'@'localhost';
+FLUSH PRIVILEGES;
+
 ```
 
 ## Creating DB in Web01
