@@ -15,4 +15,4 @@ chmod 644 /etc/nginx/nginx.conf
 # kill apache2 server if it exists since it uses port 80
 pkill apache2
 
-sudo -u nginx service restart
+sudo -u nginx service nginx start
