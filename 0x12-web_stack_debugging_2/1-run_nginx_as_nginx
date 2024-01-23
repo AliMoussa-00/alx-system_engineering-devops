@@ -15,5 +15,6 @@ chown -R nginx:nginx /etc/nginx
 
 chmod 644 /etc/nginx/nginx.conf
 
+pkill apache2
 
 sudo -u nginx -c "service nginx restart"
