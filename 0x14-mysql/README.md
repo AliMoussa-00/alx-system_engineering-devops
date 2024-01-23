@@ -123,7 +123,7 @@ GRANT SELECT ON tyrell_corp.nexus6 TO 'holberton_user'@'localhost';
 
 ```
 
-Replication
+# Replication
 
 ### 1- Adding the UFW rule
 
