@@ -93,3 +93,17 @@ $ sudo mysql
 (mysql)> SHOW GRANTS FOR 'holberton_user'@'localhost';
 ```
 
+## Creating DB in Web01
+
+```sql
+$ sudo mysql
+
+create database tyrell_corp;
+use tyrell_corp;
+create table nexus6 (id INT autoincrement  PRIMARY KEY, name VARCHAR(50));
+show tables;
+INSERT INTO nexus6 values(1,'Leon');
+select * from nexus6;
+
+```
+
