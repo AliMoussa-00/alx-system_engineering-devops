@@ -105,5 +105,7 @@ show tables;
 INSERT INTO nexus6 values(1,'Leon');
 select * from nexus6;
 
+GRANT SELECT ON tyrell_corp.nexus6 TO 'holberton_user'@'localhost';
+
 ```
 
