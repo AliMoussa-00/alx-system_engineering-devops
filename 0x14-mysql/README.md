@@ -2,7 +2,7 @@
 
 ## Install mysql 5.7.*
 
-paste the below `signature key` in the file: `signature.key`:
+Paste the below `signature key` in the file: `signature.key`:
 
 ```bash
 -----BEGIN PGP PUBLIC KEY BLOCK-----
