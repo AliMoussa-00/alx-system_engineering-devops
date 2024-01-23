@@ -123,3 +123,149 @@ GRANT SELECT ON tyrell_corp.nexus6 TO 'holberton_user'@'localhost';
 
 ```
 
+Replication
+
+### 1- Adding the UFW rule
+
+add a rule to ufw to allow incomming traffic to web-01 through port `3306`
+
+```bash
+# use your replica server IP (web-02 IP)
+$ sudo ufw allow from 34.232.76.130 to any port 3306
+```
+
+### 2- Changin the Source DB conf
+
+he default MySQL server configuration file is named `mysqld.cnf` and can be found in the `/etc/mysql/mysql.conf.d/` directory. Open this file **on the source server**
+
+```bash
+$ sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# --- /etc/mysql/mysql.conf.d/mysqld.cnf ---
+. . .
+
+server-id               = 1
+log_bin                 = /var/log/mysql/mysql-bin.log  # This defines the base name and location of MySQL’s binary log file.
+# bind-address  = 127.0.0.1
+
+# replace include_database_name with the name of the database you want to replicate.
+binlog_do_db          = tyrell_corp
+. . .
+
+$ sudo systemctl restart mysql
+# OR
+$ sudo service mysql restart
+
+```
+
+### 3- Retrieving Binary Log Coordinates from the Source
+
+we need the binary log file name and position:
+
+```sql
+$ sudo mysql
+
+-- stop the reading from the DB
+FLUSH TABLES WITH READ LOCK;
+
+-- get the current status
+SHOW MASTER STATUS;
+
+-- output !!
+Output
++------------------+----------+--------------+------------------+-------------------+
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++------------------+----------+--------------+------------------+-------------------+
+| mysql-bin.000001 |      154 | tyrell_corp  |                  |                   |
++------------------+----------+--------------+------------------+-------------------+
+1 row in set (0.00 sec)
+
+-- unlock the tables
+UNLOCK TABLES;
+
+```
+
+### 5- Migrate if you already have data in Source
+
+copying the data we have in our DB to the replica server DB
+
+```bash
+# in web-01
+$ sudo mysqldump -u root tyrell_corp > tyrell_corp.sql
+
+# EXIT to local
+# then copy the 'tyrell_corp.sql' to locall
+# copie from local to web-02
+$ exit
+$ scp web1:/home/ubuntu/tyrell_corp.sql .
+$ scp tyrell_corp.sql web2:/tmp/
+
+# Open web2
+$ sudo mysql
+(mysql)> create database tyrell_corp;
+(mysql)> exit
+
+$ sudo mysql tyrell_corp < /tmp/tyrell_corp.sql
+
+```
+
+### 6- Configuring the Replica Database
+
+If you don't have data in the source to migrate just pass to this step
+
+ change the replica’s configuration similar to how you changed the source’s.
+
+```bash
+$ sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# --- /etc/mysql/mysql.conf.d/mysqld.cnf ---
+. . .
+
+server-id               = 2
+log_bin                 = /var/log/mysql/mysql-bin.log  # This defines the base name and location of MySQL’s binary log file.
+# bind-address  = 127.0.0.1
+
+# replace include_database_name with the name of the database you want to replicate.
+binlog_do_db          = tyrell_corp
+relay-log               = /var/log/mysql/mysql-relay-bin.log
+. . .
+
+$ sudo service mysql restart
+
+```
+
+### 7- Starting
+
+now let's configure replica db
+
+```sql
+-- in web-02
+$ sudo mysql
+
+CHANGE MASTER TO
+MASTER_HOST = '34.204.101.226', -- IP of
+MASTER_USER = 'replica_user',
+MASTER_PASSWORD = 'replica_password',
+MASTER_LOG_FILE = 'mysql-bin.000001',
+MASTER_LOG_POS = 154;
+
+START SLAVE;
+
+SHOW SLAVE STATUS\G; --The \G modifier in this command rearranges the text to make it more readable
+```
+
+### 8- Test
+
+enter DB in source server add rows and check if it gets replicated in the replica DB
+
+```sql
+-- in web-01
+$ sudo mysql
+
+use tyrell_corp;
+insert into nexus6 values(2, 'Heelo');
+
+-- in web-02
+use tyrell_corp;
+select * from nexus6;
+```
