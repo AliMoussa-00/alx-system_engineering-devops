@@ -74,3 +74,22 @@ $ sudo apt-cache policy mysql-server
 $ sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
 ```
 
+## Creating Users:
+
+#### Holberton user:
+
+creating a user for the holberton school to be able to access  the replication status on both servers.
+
+```sql
+$ sudo mysql
+
+(mysql)> CREATE USER 'holberton_user'@'localhost' IDENTIFIED BY 'projectcorrection280hbtn';
+
+-- Grant to check the primary/replic or (master/slave) a status
+(mysql)> GRANT REPLICATION CLIENT ON *.* TO 'holberton_user'@'localhost';
+
+(mysql)> FLUSH PRIVILEGES;
+
+(mysql)> SHOW GRANTS FOR 'holberton_user'@'localhost';
+```
+
