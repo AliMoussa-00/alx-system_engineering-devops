@@ -1,8 +1,8 @@
 # Implementing MySQL in our servers
 
-## Install mysql ** 5.7.* **
+## Install mysql 5.7.*
 
-paste the below `signature key` in `signature.key`:
+paste the below `signature key` in the file: `signature.key`:
 
 ```bash
 -----BEGIN PGP PUBLIC KEY BLOCK-----
