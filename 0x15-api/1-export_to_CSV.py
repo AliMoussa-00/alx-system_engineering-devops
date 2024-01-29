@@ -29,9 +29,6 @@ def get_todos(user_id):
             writer = csv.writer(file)
             writer.writerows(data)
 
-    else:
-        print(f"Error: Unable to retrieve data")
-
 
 if __name__ == "__main__":
 
