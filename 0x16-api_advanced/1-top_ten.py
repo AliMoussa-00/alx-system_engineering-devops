@@ -10,7 +10,7 @@ def top_ten(subreddit):
     """the query function"""
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    headers = {"user-agent": "Mozilla/5.0"}
+    headers = {"user-agent": "my-Mozilla/5.0"}
     params = {"limit": 10}
 
     r = requests.get(url,
