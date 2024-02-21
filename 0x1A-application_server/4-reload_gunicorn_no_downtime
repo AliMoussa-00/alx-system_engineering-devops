@@ -1,7 +1,5 @@
-#!/bin/bash
-
-# Define the path to the Gunicorn socket file
-# SOCKET_FILE="/path/to/gunicorn.sock"
+#!/usr/bin/env bash
+# a script to reload Gunicorn in a graceful way.
 
 # Get the PID of the Gunicorn master process
 PID=$(sudo systemctl show -p MainPID --value 2-airbnb.service)
