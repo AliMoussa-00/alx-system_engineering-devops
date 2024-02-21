@@ -3,22 +3,24 @@
 
 # Get the PID of the Gunicorn master process
 PID=$(sudo systemctl show -p MainPID --value 2-airbnb.service)
+sudo kill -s SIGHUP "$PID"
+sleep 5
 
 # Check if the PID is valid
-if [ -n "$PID" ]; then
+# if [ -n "$PID" ]; then
     # Gracefully reload Gunicorn by sending a SIGHUP signal to the master process
-    echo "Reloading Gunicorn gracefully..."
-    sudo kill -s SIGHUP "$PID"
+    # echo "Reloading Gunicorn gracefully..."
+    # sudo kill -s SIGHUP "$PID"
 
     # Wait for Gunicorn to finish reloading
-    sleep 5
+    # sleep 5
 
     # Check if Gunicorn is still running after reload
-    if sudo systemctl is-active --quiet 2-airbnb.service; then
-        echo "Gunicorn reloaded successfully."
-    else
-        echo "Failed to reload Gunicorn."
-    fi
-else
-    echo "Gunicorn is not running or PID cannot be found."
-fi
+    # if sudo systemctl is-active --quiet 2-airbnb.service; then
+        # echo "Gunicorn reloaded successfully."
+    # else
+        # echo "Failed to reload Gunicorn."
+    # fi
+# else
+    # echo "Gunicorn is not running or PID cannot be found."
+# fi
