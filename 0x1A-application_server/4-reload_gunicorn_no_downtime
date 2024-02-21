@@ -10,7 +10,7 @@ PID=$(sudo systemctl show -p MainPID --value 2-airbnb.service)
 if [ -n "$PID" ]; then
     # Gracefully reload Gunicorn by sending a SIGHUP signal to the master process
     echo "Reloading Gunicorn gracefully..."
-    sudo kill -s SIGHUP $PID
+    sudo kill -s SIGHUP "$PID"
 
     # Wait for Gunicorn to finish reloading
     sleep 5
