@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # a script to reload Gunicorn in a graceful way.
 
-pkill -HUP gunicorn
+# pkill -HUP gunicorn
+
+systemctl status gunicorn | grep -oE 'Main PID: [0-9]+' | cut -d ' ' -f3 | xargs kill -HUP
 
 # Get the PID of the Gunicorn master process
 # PID=$(sudo systemctl show -p MainPID --value 2-airbnb.service)
